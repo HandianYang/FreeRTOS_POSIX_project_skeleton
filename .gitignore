@@ -1,0 +1,34 @@
+# Build output
+build/
+
+# Object / dependency files (safety net for in-tree builds)
+*.o
+*.d
+
+# Coverage artifacts (projCOVERAGE_TEST builds)
+*.gcno
+*.gcda
+*.gcov
+
+# Debug / core dumps
+core
+core.*
+*.core
+vgcore.*
+
+# Editors / IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Tooling caches
+.cache/
+compile_commands.json
+tags
+cscope.*
