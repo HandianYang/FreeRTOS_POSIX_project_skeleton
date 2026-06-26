@@ -32,9 +32,11 @@ LDFLAGS := -pthread
 # Kernel + hooks: shared by every build, contains no main().
 COMMON_SOURCES := \
 	$(PROJ_DIR)/hook.c \
-	$(KERNEL_DIR)/tasks.c \
+	$(KERNEL_DIR)/console.c \
 	$(KERNEL_DIR)/list.c \
 	$(KERNEL_DIR)/queue.c \
+	$(KERNEL_DIR)/tasks.c \
+	$(KERNEL_DIR)/timers.c \
 	$(PORT_DIR)/port.c \
 	$(PORT_DIR)/utils/wait_for_event.c \
 	$(HEAP_DIR)/heap_4.c
@@ -46,13 +48,13 @@ APP_SOURCES := \
 
 # Demo: generic runner + the selected demo module. Override with e.g.
 #   make demo DEMO=queue
-DEMO ?= semaphore
+DEMO ?= blinky
 DEMO_SOURCES := \
 	$(DEMO_DIR)/runner.c \
 	$(DEMO_DIR)/$(DEMO)_demo.c
 
 APP_TARGET  := $(BUILD_DIR)/app
-DEMO_TARGET := $(BUILD_DIR)/demo_$(DEMO)
+DEMO_TARGET := $(BUILD_DIR)/$(DEMO)_demo
 
 APP_OBJECTS  := $(patsubst %.c,$(BUILD_DIR)/%.o,$(APP_SOURCES) $(COMMON_SOURCES))
 DEMO_OBJECTS := $(patsubst %.c,$(BUILD_DIR)/%.o,$(DEMO_SOURCES) $(COMMON_SOURCES))
