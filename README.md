@@ -21,10 +21,12 @@ project/              Production application
 demo/                 Self-contained demos
   runner.c            Generic demo entry point: calls demo_start(), then starts the scheduler
   demo.h              Uniform interface: BaseType_t demo_start(void);
-  semaphore_demo.c    Example demo implementing demo_start()
+  blinky_demo.c       Example demo copied from FreeRTOS; `task`, `timers`, and `semphr` are required and used in this demo.
+  semaphore_demo.c    Example demo implementing binary semaphores; `task` and `semphr` are required and used in this demo.
+  
 Makefile
-README.md             English (source of truth)
-README.zh-TW.md       Traditional Chinese translation
+README.md             English documentation
+README.zh-TW.md       Traditional Chinese documentation
 ```
 
 ### Design notes
@@ -43,16 +45,16 @@ README.zh-TW.md       Traditional Chinese translation
 |---|---|---|
 | `make` or `make app` | `build/app` | Build the production application |
 | `make run` | — | Build and run the production application |
-| `make demo` | `build/demo_semaphore` | Build the default demo (semaphore) |
+| `make demo` | `build/blinky_demo` | Build the default demo (BLINKY_DEMO) |
 | `make run-demo` | — | Build and run the default demo |
-| `make demo DEMO=foo` | `build/demo_foo` | Build `demo/foo_demo.c` |
-| `make run-demo DEMO=foo` | — | Build and run the given demo |
+| `make demo DEMO=semaphore` | `build/semaphore_demo` | Build `demo/semaphore_demo.c` |
+| `make run-demo DEMO=semaphore` | — | Build and run the given demo |
 | `make clean` | — | Remove `build/` |
 
-The `DEMO` variable selects which demo module to build; it defaults to `semaphore`.
+The `DEMO` variable selects which demo module to build; it defaults to `blinky`.
 
 > Note: a demo runs an infinite loop — stop it with `Ctrl-C`. If you observe output
-> with `timeout 3 ./build/demo_semaphore`, exit code `124` means `timeout` stopped it
+> with `timeout 3 ./build/blinky_demo`, exit code `124` means `timeout` stopped it
 > normally and is not an error.
 
 ## How to add or modify code
@@ -100,13 +102,7 @@ Edit the relevant `demo/<name>_demo.c`, then run `make run-demo DEMO=<name>`.
 
 [config/FreeRTOSConfig.h](config/FreeRTOSConfig.h) enables only the options this
 project uses and leaves the rest at the kernel defaults. When enabling a new feature,
-remember to add both the matching option and its source file. For example:
-
-- **Software timers**: set `configUSE_TIMERS` to `1` and add `FreeRTOS/timers.c` to
-  `COMMON_SOURCES` in the Makefile.
-- **Hooks** (idle/tick/malloc-failed…): set the corresponding `configUSE_*_HOOK` to
-  `1` and implement that callback in [project/hook.c](project/hook.c); otherwise you
-  get an `undefined reference` at link time.
+remember to add both the matching option and its source file.
 
 > `projCOVERAGE_TEST` and `projENABLE_TRACING` are defined on the command line by the
 > Makefile via `-D`; do not hard-code them in the config file.
